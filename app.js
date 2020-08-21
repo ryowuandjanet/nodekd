@@ -5,12 +5,11 @@ const bodyParser = require('body-parser');
 const expressValidator = require('express-validator');
 const flash = require('connect-flash');
 const session = require('express-session');
+const passport = require('passport');
+const config = require('./config/database');
 
 
-mongoose.connect("mongodb://localhost:27017/nodekb",{ 
-  useNewUrlParser: true,
-  useUnifiedTopology: true 
-});
+mongoose.connect(config.database,{ useNewUrlParser: true,useUnifiedTopology: true });
 
 let db=mongoose.connection;
 
@@ -77,6 +76,17 @@ app.use(expressValidator({
   }
 }));
 
+// Passport Config
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('*', function(req, res, next){
+  res.locals.user = req.user || null;
+  next();
+});
+
 app.get('/', function(req, res, next){
     Article.find({},function (err,articles) {
         if(err){
@@ -91,9 +101,11 @@ app.get('/', function(req, res, next){
 
 });
 
-// Route Files
 let articles = require('./routes/articles');
+let users = require('./routes/users');
 app.use('/articles', articles);
+app.use('/users', users);
+
 
 
 app.listen(PORT,function(){

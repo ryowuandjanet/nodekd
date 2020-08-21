@@ -6,17 +6,26 @@ html
         link(rel='stylesheet' href='/css/style.css')
     body
       nav.navbar.navbar-expand-md.navbar-dark.bg-dark
-          a.navbar-brand(href='/') KnowledgeBase
-          button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarsExampleDefault', aria-controls='navbarsExampleDefault', aria-expanded='false', aria-label='Toggle navigation')
-            span.navbar-toggler-icon
-          #navbarsExampleDefault.collapse.navbar-collapse
-            ul.navbar-nav.mr-auto
-              li.nav-item.active
-                a.nav-link(href='/')
-                  | Home 
-                  span.sr-only (current)
+        a.navbar-brand(href='/') KnowledgeBase
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarText', aria-controls='navbarText', aria-expanded='false', aria-label='Toggle navigation')
+
+        #navbarText.collapse.navbar-collapse
+          ul.navbar-nav.mr-auto
+            ul.nav.navbar-nav
+              li.nav-item
+                a.nav-link(href='/') Home
               li.nav-item
                 a.nav-link(href='/articles/add') Add Article
+          span.navbar-text
+            ul.nav.navbar-nav.navbar-right
+              if user
+                li.nav-item
+                  a.nav-link(href='/users/logout') Logout
+              else
+                li.nav-item
+                  a.nav-link(href='/users/register') Register 
+                li.nav-item
+                  a.nav-link(href='/users/login') Login
       .container
         != messages('message', locals)
         if errors
